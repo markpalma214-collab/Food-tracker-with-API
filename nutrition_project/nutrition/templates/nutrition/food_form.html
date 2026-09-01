@@ -1,0 +1,12 @@
+{% extends 'nutrition/base.html' %}
+{% block content %}
+<div class="card p-4 mx-auto" style="max-width:600px;">
+    <h4 class="mb-3">{{ title }}</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save</button>
+        <a href="{% url 'food_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

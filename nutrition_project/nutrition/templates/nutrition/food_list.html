@@ -1,0 +1,39 @@
+{% extends 'nutrition/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>My Food Log</h3>
+    <a href="{% url 'food_create' %}" class="btn btn-success">+ Add Food</a>
+</div>
+
+<div class="row g-4">
+    {% for entry in entries %}
+        <div class="col-6 col-md-4 col-lg-3">
+            <div class="card h-100">
+                {% if entry.image_url %}
+                    <img src="{{ entry.image_url }}" alt="{{ entry.food }}"
+                         class="card-img-top" style="height:180px;object-fit:cover;border-radius:14px 14px 0 0;">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-light text-muted"
+                         style="height:180px;border-radius:14px 14px 0 0;">
+                        No image
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title mb-1">{{ entry.food }}</h5>
+                    <p class="text-muted small mb-2">{{ entry.date|date:"M d, Y H:i" }}</p>
+                    <p class="mb-1"><span class="nutri-value">{{ entry.calories_kcal|floatformat:0 }}</span> kcal</p>
+                    <p class="text-muted small mb-3">Qty: {{ entry.quantity }}</p>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'food_update' entry.pk %}" class="btn btn-sm btn-outline-primary flex-fill">Edit</a>
+                        <a href="{% url 'food_delete' entry.pk %}" class="btn btn-sm btn-outline-danger flex-fill">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <p class="text-center text-muted">No food logged yet.</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

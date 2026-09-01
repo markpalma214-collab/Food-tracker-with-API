@@ -1,0 +1,63 @@
+{% extends 'nutrition/base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Daily Summary — {{ selected_date }}</h3>
+    <a href="{% url 'daily_history_today' %}" class="btn btn-sm btn-outline-dark">Today</a>
+</div>
+
+{% for level, msg in alerts %}
+    <div class="alert alert-{{ level }}">{{ msg }}</div>
+{% endfor %}
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card p-3 text-center">
+            <div class="text-muted">Calories</div>
+            <div class="fs-3 nutri-value">{{ totals.calories|floatformat:0 }} kcal</div>
+            {% if goal_calories %}
+                <div class="text-muted small">Goal: {{ goal_calories|floatformat:0 }} kcal</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="card p-4 mb-4">
+    <h5 class="mb-3">Nutrition Breakdown</h5>
+    <table class="table mb-0">
+        <tbody>
+            <tr><th>Protein</th><td>{{ totals.protein|floatformat:1 }} g</td></tr>
+            <tr><th>Fat</th><td>{{ totals.fat|floatformat:1 }} g</td></tr>
+            <tr><th>Saturated Fat</th><td>{{ totals.saturated_fat|floatformat:1 }} g</td></tr>
+            <tr><th>Carbs</th><td>{{ totals.carbs|floatformat:1 }} g</td></tr>
+            <tr><th>Fiber</th><td>{{ totals.fiber|floatformat:1 }} g</td></tr>
+            <tr><th>Sugar</th><td>{{ totals.sugar|floatformat:1 }} g</td></tr>
+            <tr><th>Sodium</th><td>{{ totals.sodium|floatformat:0 }} mg</td></tr>
+            <tr><th>Cholesterol</th><td>{{ totals.cholesterol|floatformat:0 }} mg</td></tr>
+            <tr><th>Potassium</th><td>{{ totals.potassium|floatformat:0 }} mg</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<h5>Foods logged this day</h5>
+<table class="table bg-white rounded shadow-sm">
+    <thead><tr><th></th><th>Food</th><th>Qty</th><th>Calories</th><th>Time</th></tr></thead>
+    <tbody>
+    {% for entry in entries %}
+        <tr>
+            <td>
+                {% if entry.image_url %}
+                    <img src="{{ entry.image_url }}" alt="{{ entry.food }}"
+                         style="width:36px;height:36px;object-fit:cover;border-radius:6px;">
+                {% endif %}
+            </td>
+            <td>{{ entry.food }}</td>
+            <td>{{ entry.quantity }}</td>
+            <td>{{ entry.calories_kcal|floatformat:0 }} kcal</td>
+            <td>{{ entry.date|date:"H:i" }}</td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="5" class="text-center text-muted">No entries for this date.</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
